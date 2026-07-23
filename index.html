@@ -304,6 +304,24 @@
   }
   .field .fv { font-size: 13.5px; line-height: 1.55; white-space: pre-line; }
 
+  /* Schedule */
+  .sched-section { margin-bottom: 30px; max-width: 640px; }
+  .sched-title { font-size: 17px; font-weight: 500; color: var(--heading); margin-bottom: 12px; }
+  .sched-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--card);
+    border-radius: 14px;
+    box-shadow: 0 1px 3px var(--shadow);
+    padding: 13px 20px;
+    margin-bottom: 8px;
+  }
+  .sched-row .sr-date { font-size: 12.5px; color: var(--subtle); width: 58px; flex-shrink: 0; }
+  .sched-row .sr-name { font-size: 14.5px; font-weight: 500; color: var(--heading); }
+  .sched-row.past { opacity: 0.55; }
+  .sched-row.noclass .sr-name { color: var(--subtle); font-weight: 400; }
+
   /* Leaderboard */
   .lb-row {
     display: flex;
@@ -535,6 +553,7 @@
     </div>
     <nav class="side-links">
       <a class="side-link" id="nav-dashboard" href="#dashboard"><span class="lbl">Attendance</span></a>
+      <a class="side-link" id="nav-schedule" href="#schedule"><span class="lbl">Schedule</span></a>
       <a class="side-link" id="nav-revenue-goal" href="#revenue-goal"><span class="lbl">Revenue Goal</span></a>
       <a class="side-link" id="nav-submit-revenue" href="#submit-revenue"><span class="lbl">Submit Revenue</span></a>
       <div class="side-header"><span class="lbl">Leaderboard</span></div>
@@ -563,6 +582,10 @@
     <div class="card">
       <table id="attTable"></table>
     </div>
+  </div>
+
+  <div id="view-schedule" style="display:none">
+    <div id="schedList"></div>
   </div>
 
   <div id="view-leaderboard" style="display:none">
@@ -674,6 +697,22 @@ const SESSIONS = [
   { date: "Jun 25", title: "The Buyer Seller Dynamic" },
   { date: "Jul 9",  title: "Essential Communication Skills" },
   { date: "Jul 16", title: "Creating Mutual Agreement" }
+];
+
+/* Full class schedule for the Schedule tab. Dates are ISO (YYYY-MM-DD);
+   classes on or after today's date show under Upcoming automatically.
+   noClass: true renders as an off week. */
+const SCHEDULE = [
+  { date: "2026-06-18", title: "The Success Triangle" },
+  { date: "2026-06-25", title: "The Buyer Seller Dynamic" },
+  { date: "2026-07-02", title: "No Class (week of the 4th)", noClass: true },
+  { date: "2026-07-09", title: "Essential Communication Skills" },
+  { date: "2026-07-16", title: "Creating Mutual Agreement" },
+  { date: "2026-07-23", title: "Discovering Buyers' Motivation" },
+  { date: "2026-07-30", title: "Better Understanding through Asking Questions" },
+  { date: "2026-08-06", title: "Understanding Investment Parameters" },
+  { date: "2026-08-13", title: "Identifying the Decision-Making Process" },
+  { date: "2026-08-20", title: "Communicating the Solution and Closing the Sale" }
 ];
 
 const PEOPLE = [
@@ -981,6 +1020,32 @@ function renderTable() {
     rows.length === PEOPLE.length ? `Showing all ${PEOPLE.length} people` : `Showing ${rows.length} of ${PEOPLE.length} people`;
 }
 
+function renderSchedule() {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const fmt = iso => {
+    const [y, mo, d] = iso.split("-").map(Number);
+    return new Date(y, mo - 1, d);
+  };
+  const label = iso => fmt(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+
+  const upcoming = SCHEDULE.filter(s => fmt(s.date) >= today);
+  const previous = SCHEDULE.filter(s => fmt(s.date) < today);
+
+  const row = (s, past) => `
+    <div class="sched-row ${past ? "past" : ""} ${s.noClass ? "noclass" : ""}">
+      <span class="sr-date">${label(s.date)}</span>
+      <span class="sr-name">${s.title}</span>
+    </div>`;
+
+  const section = (title, items, past) => items.length
+    ? `<div class="sched-section"><div class="sched-title">${title}</div>${items.map(s => row(s, past)).join("")}</div>`
+    : "";
+
+  document.getElementById("schedList").innerHTML =
+    section("Upcoming", upcoming, false) + section("Previous", previous, true);
+}
+
 function renderLeaderboard() {
   const rows = PEOPLE.map(p => {
     const att = p.att.reduce((a,b)=>a+b,0);
@@ -1084,7 +1149,7 @@ function renderGoal() {
 }
 
 /* ================= routing / nav / theme ================= */
-const VIEWS = ["dashboard","leaderboard","revenue-goal","submit-revenue","groups-sessions","groups-lessons","groups-revenue"];
+const VIEWS = ["dashboard","schedule","leaderboard","revenue-goal","submit-revenue","groups-sessions","groups-lessons","groups-revenue"];
 
 function show(view) {
   const v = VIEWS.includes(view) ? view : "dashboard";
@@ -1113,6 +1178,7 @@ function toggleTheme() {
 renderStats();
 populateFilters();
 renderTable();
+renderSchedule();
 renderLeaderboard();
 renderGroups();
 renderGoal();
