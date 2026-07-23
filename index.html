@@ -11,18 +11,132 @@
     --fresh: #00ADED;
     --energetic: #0045C2;
     --limitless: #FAB040;
-    --gray: #EDEDED;
-    --body: #333333;
-    --subtle: #666666;
+    --green-a: #058A5E;
+    --green-b: #2EC489;
     --white: #FFFFFF;
+    /* theme tokens */
+    --bg: #FAFAFB;
+    --card: #FFFFFF;
+    --text: #333333;
+    --subtle: #666666;
+    --heading: #21245C;
+    --line: #F0F0F3;
+    --stripe: #F7F8FA;
+    --dotoff: #E2E4EA;
+    --shadow: rgba(33,36,92,0.08);
+    --shadow-strong: rgba(33,36,92,0.10);
+    --gray: #EDEDED;
+    --barbg: #E9EAF0;
+    --zero: #C4C7D0;
+    --foot: #FBFBFD;
+    --seg-att: #21245C;
+    --thead: #21245C;
+  }
+  body[data-theme="dark"] {
+    --bg: #12142A;
+    --card: #1C1F3D;
+    --text: #D9DBEA;
+    --subtle: #9EA1BE;
+    --heading: #E8EAF6;
+    --line: #2A2D52;
+    --stripe: #212449;
+    --dotoff: #33365E;
+    --shadow: rgba(0,0,0,0.35);
+    --shadow-strong: rgba(0,0,0,0.40);
+    --gray: #2A2D52;
+    --barbg: #2A2D52;
+    --zero: #4A4E78;
+    --foot: #191C38;
+    --seg-att: #5C7CF0;
+    --thead: #181B36;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: 'Poppins', Arial, sans-serif;
-    color: var(--body);
-    background: #FAFAFB;
-    padding: 32px 20px 80px;
+    color: var(--text);
+    background: var(--bg);
   }
+
+  /* Layout: side nav + main */
+  .layout { display: flex; min-height: 100vh; }
+  .sidenav {
+    width: 232px;
+    flex-shrink: 0;
+    background: var(--card);
+    box-shadow: 2px 0 10px var(--shadow);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: width .18s ease;
+    overflow: hidden;
+    z-index: 5;
+  }
+  .sidenav.collapsed { width: 58px; }
+  .sidenav.collapsed .lbl,
+  .sidenav.collapsed .side-brand,
+  .sidenav.collapsed .side-header,
+  .sidenav.collapsed .theme-toggle { display: none; }
+  .side-top { display: flex; align-items: center; gap: 12px; padding: 18px 17px 14px; }
+  .side-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 2px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .side-toggle .bar { width: 18px; height: 2px; border-radius: 2px; background: var(--heading); }
+  .side-brand { font-weight: 600; color: var(--heading); font-size: 15px; white-space: nowrap; }
+  .side-links { flex: 1; padding: 4px 10px; overflow-y: auto; }
+  .side-link {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: var(--heading);
+    font-size: 13.5px;
+    font-weight: 500;
+    text-decoration: none;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .side-link:hover { background: var(--stripe); }
+  .side-link.active {
+    background: linear-gradient(135deg, var(--energetic), var(--fresh));
+    color: var(--white);
+    box-shadow: 0 3px 10px rgba(0,173,237,0.30);
+  }
+  .side-header {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--subtle);
+    font-weight: 600;
+    padding: 16px 12px 6px;
+    white-space: nowrap;
+  }
+  .side-link.sub { padding-left: 24px; }
+  .side-bottom { padding: 14px 12px 18px; }
+  .theme-toggle {
+    width: 100%;
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 12.5px;
+    font-weight: 500;
+    padding: 9px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--heading);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .theme-toggle:hover { background: var(--stripe); }
+
+  .main { flex: 1; min-width: 0; padding: 32px 24px 80px; }
   .wrap { max-width: 1060px; margin: 0 auto; }
 
   .eyebrow {
@@ -35,28 +149,8 @@
   h1 {
     font-size: 20px;
     font-weight: 500;
-    color: var(--stable);
+    color: var(--heading);
     margin: 4px 0 24px;
-  }
-
-  /* Tabs */
-  .tabs { display: flex; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; }
-  .tab {
-    padding: 12px 26px;
-    border-radius: 999px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    background: var(--white);
-    color: var(--stable);
-    box-shadow: 0 1px 3px rgba(33,36,92,0.10);
-    transition: all .15s ease;
-  }
-  .tab.active {
-    background: linear-gradient(135deg, var(--energetic), var(--fresh));
-    color: var(--white);
-    box-shadow: 0 4px 14px rgba(0,173,237,0.35);
   }
 
   /* Stat row */
@@ -64,24 +158,24 @@
   .stat {
     flex: 1;
     min-width: 150px;
-    background: var(--white);
+    background: var(--card);
     border-radius: 14px;
     padding: 16px 20px;
-    box-shadow: 0 1px 3px rgba(33,36,92,0.08);
+    box-shadow: 0 1px 3px var(--shadow);
   }
-  .stat .num { font-size: 26px; font-weight: 600; color: var(--stable); }
+  .stat .num { font-size: 26px; font-weight: 600; color: var(--heading); }
   .stat .lbl { font-size: 12px; color: var(--subtle); margin-top: 2px; }
 
   /* Attendance table */
   .card {
-    background: var(--white);
+    background: var(--card);
     border-radius: 16px;
-    box-shadow: 0 1px 4px rgba(33,36,92,0.08);
+    box-shadow: 0 1px 4px var(--shadow);
     overflow: hidden;
   }
   table { width: 100%; border-collapse: collapse; }
   thead th {
-    background: var(--stable);
+    background: var(--thead);
     color: var(--white);
     font-weight: 600;
     font-size: 12.5px;
@@ -95,28 +189,28 @@
     padding: 10px 10px;
     font-size: 13.5px;
     text-align: center;
-    border-top: 1px solid #F0F0F3;
+    border-top: 1px solid var(--line);
   }
-  tbody tr:nth-child(even) { background: #F7F8FA; }
-  tbody td:first-child { text-align: left; padding-left: 20px; font-weight: 500; color: var(--stable); }
+  tbody tr:nth-child(even) { background: var(--stripe); }
+  tbody td:first-child { text-align: left; padding-left: 20px; font-weight: 500; color: var(--heading); }
   .dot {
     display: inline-block;
     width: 14px; height: 14px;
     border-radius: 50%;
   }
   .dot.on { background: var(--fresh); }
-  .dot.off { background: #E2E4EA; }
-  td.total { font-weight: 600; color: var(--stable); }
+  .dot.off { background: var(--dotoff); }
+  td.total { font-weight: 600; color: var(--heading); }
   td.subs { font-weight: 600; }
-  td.subs.zero { color: #C4C7D0; font-weight: 400; }
-  td.subs.some { color: var(--energetic); }
+  td.subs.zero { color: var(--zero); font-weight: 400; }
+  td.subs.some { color: var(--fresh); }
   tfoot td {
     padding: 10px;
     font-size: 12px;
     color: var(--subtle);
     text-align: center;
     border-top: 2px solid var(--gray);
-    background: #FBFBFD;
+    background: var(--foot);
   }
   tfoot td:first-child { text-align: left; padding-left: 20px; }
 
@@ -129,11 +223,11 @@
     margin-bottom: 12px;
   }
   .session-head .sd { font-size: 13px; font-weight: 400; color: var(--subtle); }
-  .session-head .st { font-size: 17px; font-weight: 500; color: var(--stable); }
+  .session-head .st { font-size: 17px; font-weight: 500; color: var(--heading); }
   .entry {
-    background: var(--white);
+    background: var(--card);
     border-radius: 14px;
-    box-shadow: 0 1px 3px rgba(33,36,92,0.08);
+    box-shadow: 0 1px 3px var(--shadow);
     margin-bottom: 10px;
     overflow: hidden;
   }
@@ -145,7 +239,7 @@
     cursor: pointer;
     user-select: none;
   }
-  .entry-head .who { font-weight: 500; color: var(--stable); font-size: 14.5px; flex: 1; }
+  .entry-head .who { font-weight: 500; color: var(--heading); font-size: 14.5px; flex: 1; }
   .badge {
     font-size: 11.5px;
     font-weight: 500;
@@ -153,9 +247,9 @@
     border-radius: 999px;
     white-space: nowrap;
   }
-  .badge.conf { background: var(--gray); color: var(--stable); }
+  .badge.conf { background: var(--gray); color: var(--heading); }
   .badge.rev { background: var(--limitless); color: var(--stable); }
-  .badge.applied { background: rgba(0,173,237,0.12); color: var(--energetic); }
+  .badge.applied { background: rgba(0,173,237,0.14); color: var(--fresh); }
   .chev {
     width: 10px; height: 10px;
     border-right: 2px solid var(--subtle);
@@ -183,9 +277,9 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    background: var(--white);
+    background: var(--card);
     border-radius: 14px;
-    box-shadow: 0 1px 3px rgba(33,36,92,0.08);
+    box-shadow: 0 1px 3px var(--shadow);
     padding: 14px 20px;
     margin-bottom: 8px;
   }
@@ -202,11 +296,11 @@
     flex-shrink: 0;
   }
   .lb-row.top .lb-rank { color: rgba(255,255,255,0.85); font-size: 22px; }
-  .lb-name { font-weight: 500; color: var(--stable); font-size: 15px; min-width: 160px; }
+  .lb-name { font-weight: 500; color: var(--heading); font-size: 15px; min-width: 160px; }
   .lb-row.top .lb-name { color: var(--white); font-size: 17px; font-weight: 600; }
-  .lb-bar-wrap { flex: 1; display: flex; align-items: center; gap: 0; height: 14px; border-radius: 999px; overflow: hidden; background: #E9EAF0; }
+  .lb-bar-wrap { flex: 1; display: flex; align-items: center; gap: 0; height: 14px; border-radius: 999px; overflow: hidden; background: var(--barbg); }
   .lb-row.top .lb-bar-wrap { background: rgba(255,255,255,0.25); }
-  .lb-seg-att { height: 100%; background: var(--stable); }
+  .lb-seg-att { height: 100%; background: var(--seg-att); }
   .lb-row.top .lb-seg-att { background: rgba(255,255,255,0.95); }
   .lb-seg-sub { height: 100%; background: var(--limitless); }
   .lb-detail { font-size: 12px; color: var(--subtle); min-width: 200px; text-align: right; }
@@ -216,22 +310,18 @@
     text-align: right;
     font-size: 20px;
     font-weight: 600;
-    color: var(--stable);
+    color: var(--heading);
     flex-shrink: 0;
   }
   .lb-row.top .lb-score { color: var(--white); font-size: 24px; }
   .lb-note { margin-top: 16px; font-size: 12px; color: var(--subtle); }
-  /* Groups */
-  .groups-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    align-items: start;
-  }
+
+  /* Group views */
+  .gwrap { max-width: 620px; }
   .gcol {
-    background: var(--white);
+    background: var(--card);
     border-radius: 16px;
-    box-shadow: 0 1px 4px rgba(33,36,92,0.08);
+    box-shadow: 0 1px 4px var(--shadow);
     overflow: hidden;
   }
   .gcol-head {
@@ -243,8 +333,8 @@
   .gcol-head .sub { display: block; font-weight: 200; font-size: 11px; opacity: 0.85; margin-top: 2px; }
   .gcol.c-sessions .gcol-head { background: linear-gradient(135deg, var(--stable), var(--energetic)); }
   .gcol.c-lessons  .gcol-head { background: linear-gradient(135deg, var(--energetic), var(--fresh)); }
-  .gcol.c-revenue  .gcol-head { background: linear-gradient(135deg, #F05A28, var(--limitless)); }
-  .gblock { padding: 12px 18px 14px; border-top: 1px solid #F0F0F3; }
+  .gcol.c-revenue  .gcol-head { background: linear-gradient(135deg, var(--green-a), var(--green-b)); }
+  .gblock { padding: 12px 18px 14px; border-top: 1px solid var(--line); }
   .gblock-head {
     display: flex;
     align-items: baseline;
@@ -254,40 +344,51 @@
   .gnum {
     font-size: 22px;
     font-weight: 600;
-    color: var(--stable);
+    color: var(--heading);
     line-height: 1;
   }
   .gcount { font-size: 11px; color: var(--subtle); }
-  .gblock.empty-group .gnum { color: #C4C7D0; }
-  .gnames { font-size: 13px; line-height: 1.7; color: var(--body); }
-  .gnames .nobody { color: #C4C7D0; }
-  @media (max-width: 860px) {
-    .groups-grid { grid-template-columns: 1fr; }
-  }
+  .gblock.empty-group .gnum { color: var(--zero); }
+  .gnames { font-size: 13px; line-height: 1.7; color: var(--text); }
+  .gnames .nobody { color: var(--zero); }
 
   @media (max-width: 720px) {
     .lb-detail { display: none; }
     .lb-name { min-width: 120px; }
-  }
-
-  @media (max-width: 720px) {
     thead th .sess-title { display: none; }
     tbody td, thead th { padding: 8px 5px; font-size: 12px; }
     tbody td:first-child, thead th:first-child { padding-left: 10px; }
+    .main { padding: 20px 12px 60px; }
   }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="layout">
+  <aside class="sidenav" id="sidenav">
+    <div class="side-top">
+      <button class="side-toggle" onclick="toggleNav()" aria-label="Toggle navigation">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+      <span class="side-brand">Hubexo</span>
+    </div>
+    <nav class="side-links">
+      <a class="side-link" id="nav-dashboard" href="#dashboard"><span class="lbl">Attendance</span></a>
+      <a class="side-link" id="nav-lessons" href="#lessons"><span class="lbl">Lessons Learned</span></a>
+      <a class="side-link" id="nav-leaderboard" href="#leaderboard"><span class="lbl">Leaderboard</span></a>
+      <div class="side-header"><span class="lbl">Groups</span></div>
+      <a class="side-link sub" id="nav-groups-sessions" href="#groups-sessions"><span class="lbl">Sessions Attended</span></a>
+      <a class="side-link sub" id="nav-groups-lessons" href="#groups-lessons"><span class="lbl">Lessons Learned</span></a>
+      <a class="side-link sub" id="nav-groups-revenue" href="#groups-revenue"><span class="lbl">Revenue Attributed</span></a>
+    </nav>
+    <div class="side-bottom">
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">Dark mode</button>
+    </div>
+  </aside>
+
+  <div class="main">
+  <div class="wrap">
   <div class="eyebrow">Hubexo</div>
   <h1>Essentials Dashboard</h1>
-
-  <div class="tabs">
-    <button class="tab" id="tab-dashboard" onclick="go('dashboard')">Attendance</button>
-    <button class="tab" id="tab-lessons" onclick="go('lessons')">Lessons Learned</button>
-    <button class="tab" id="tab-leaderboard" onclick="go('leaderboard')">Leaderboard</button>
-    <button class="tab" id="tab-groups" onclick="go('groups')">Groups</button>
-  </div>
 
   <div id="view-dashboard">
     <div class="stats" id="statRow"></div>
@@ -305,10 +406,21 @@
     <div class="lb-note">Score = 1 point per session attended + 1 point per Lessons Learned submission</div>
   </div>
 
-  <div id="view-groups" style="display:none">
-    <div class="groups-grid" id="groupsGrid"></div>
+  <div id="view-groups-sessions" style="display:none">
+    <div class="gwrap" id="grpSessions"></div>
   </div>
-</div>
+
+  <div id="view-groups-lessons" style="display:none">
+    <div class="gwrap" id="grpLessons"></div>
+  </div>
+
+  <div id="view-groups-revenue" style="display:none">
+    <div class="gwrap" id="grpRevenue"></div>
+  </div>
+
+  </div><!-- /wrap -->
+  </div><!-- /main -->
+</div><!-- /layout -->
 
 <script>
 /* ============================================================
@@ -647,30 +759,29 @@ function revCount(name) {
 function renderGroups() {
   const metrics = [
     {
-      cls: "c-sessions", title: "Sessions Attended",
+      target: "grpSessions", cls: "c-sessions", title: "Sessions Attended",
       sub: "of " + SESSIONS.length + " sessions",
       val: p => p.att.reduce((a,b)=>a+b,0),
       noun: n => n === 1 ? "session" : "sessions"
     },
     {
-      cls: "c-lessons", title: "Lessons Learned",
+      target: "grpLessons", cls: "c-lessons", title: "Lessons Learned",
       sub: "form submissions",
       val: p => subCount(p.name),
       noun: n => n === 1 ? "submission" : "submissions"
     },
     {
-      cls: "c-revenue", title: "Revenue Attributed",
+      target: "grpRevenue", cls: "c-revenue", title: "Revenue Attributed",
       sub: "submissions crediting training with revenue",
       val: p => revCount(p.name),
       noun: n => n === 1 ? "submission" : "submissions"
     }
   ];
 
-  let html = "";
   metrics.forEach(m => {
     const vals = PEOPLE.map(p => ({ name: p.name, n: m.val(p) }));
     const maxN = Math.max(...vals.map(v => v.n));
-    html += `<div class="gcol ${m.cls}">
+    let html = `<div class="gcol ${m.cls}">
       <div class="gcol-head">${m.title}<span class="sub">${m.sub}</span></div>`;
     for (let n = maxN; n >= 0; n--) {
       const names = vals.filter(v => v.n === n).map(v => v.name).sort();
@@ -683,29 +794,52 @@ function renderGroups() {
       </div>`;
     }
     html += "</div>";
+    document.getElementById(m.target).innerHTML = html;
   });
-  document.getElementById("groupsGrid").innerHTML = html;
 }
 
-/* ================= routing ================= */
-function go(view) {
-  location.hash = view;
-  show(view);
-}
+/* ================= routing / nav / theme ================= */
+const VIEWS = ["dashboard","lessons","leaderboard","groups-sessions","groups-lessons","groups-revenue"];
+
 function show(view) {
-  const v = ["lessons","leaderboard","groups"].includes(view) ? view : "dashboard";
-  ["dashboard","lessons","leaderboard","groups"].forEach(name => {
+  const v = VIEWS.includes(view) ? view : "dashboard";
+  VIEWS.forEach(name => {
     document.getElementById("view-" + name).style.display = v === name ? "" : "none";
-    document.getElementById("tab-" + name).classList.toggle("active", v === name);
+    document.getElementById("nav-" + name).classList.toggle("active", v === name);
   });
 }
 window.addEventListener("hashchange", () => show(location.hash.replace("#","")));
 
+function toggleNav() {
+  const collapsed = document.getElementById("sidenav").classList.toggle("collapsed");
+  try { localStorage.setItem("hubexo-nav", collapsed ? "collapsed" : "open"); } catch (e) {}
+}
+
+function setTheme(t) {
+  document.body.setAttribute("data-theme", t);
+  document.getElementById("themeToggle").textContent = t === "dark" ? "Light mode" : "Dark mode";
+  try { localStorage.setItem("hubexo-theme", t); } catch (e) {}
+}
+function toggleTheme() {
+  setTheme(document.body.getAttribute("data-theme") === "dark" ? "light" : "dark");
+}
+
+/* init */
 renderStats();
 renderTable();
 renderLessons();
 renderLeaderboard();
 renderGroups();
+
+let savedTheme = "light";
+let savedNav = "open";
+try {
+  savedTheme = localStorage.getItem("hubexo-theme") || "light";
+  savedNav = localStorage.getItem("hubexo-nav") || "open";
+} catch (e) {}
+setTheme(savedTheme);
+if (savedNav === "collapsed") document.getElementById("sidenav").classList.add("collapsed");
+
 show(location.hash.replace("#","") || "dashboard");
 </script>
 </body>
