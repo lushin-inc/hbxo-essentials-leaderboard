@@ -535,7 +535,6 @@
     </div>
     <nav class="side-links">
       <a class="side-link" id="nav-dashboard" href="#dashboard"><span class="lbl">Attendance</span></a>
-      <a class="side-link" id="nav-lessons" href="#lessons"><span class="lbl">Lessons Learned</span></a>
       <a class="side-link" id="nav-leaderboard" href="#leaderboard"><span class="lbl">Leaderboard</span></a>
       <a class="side-link" id="nav-revenue-goal" href="#revenue-goal"><span class="lbl">Revenue Goal</span></a>
       <a class="side-link" id="nav-submit-revenue" href="#submit-revenue"><span class="lbl">Submit Revenue</span></a>
@@ -564,10 +563,6 @@
     <div class="card">
       <table id="attTable"></table>
     </div>
-  </div>
-
-  <div id="view-lessons" style="display:none">
-    <div id="lessonsList"></div>
   </div>
 
   <div id="view-leaderboard" style="display:none">
@@ -986,48 +981,6 @@ function renderTable() {
     rows.length === PEOPLE.length ? `Showing all ${PEOPLE.length} people` : `Showing ${rows.length} of ${PEOPLE.length} people`;
 }
 
-function field(label, value) {
-  if (!value) return "";
-  return `<div class="field"><div class="fl">${label}</div><div class="fv">${value}</div></div>`;
-}
-
-function renderLessons() {
-  let html = "";
-  LESSON_GROUPS.forEach(g => {
-    const items = LESSONS.filter(l => l.session === g.key);
-    if (!items.length) return;
-    html += `<div class="session-group">
-      <div class="session-head"><span class="sd">${g.date}</span><span class="st">${g.title}</span></div>`;
-    items.forEach((l, idx) => {
-      const badges = [];
-      if (l.confidence != null) badges.push(`<span class="badge conf">Confidence ${l.confidence}/10</span>`);
-      if (l.applied === "Yes") badges.push(`<span class="badge applied">Applied live</span>`);
-      if (l.revenue) badges.push(`<span class="badge rev">${l.revenue}</span>`);
-      html += `<div class="entry" id="e-${g.key}-${idx}">
-        <div class="entry-head" onclick="this.parentElement.classList.toggle('open')">
-          <span class="who">${l.name}</span>
-          ${badges.join("")}
-          <span class="chev"></span>
-        </div>
-        <div class="entry-body">
-          ${field("Session title they gave", l.topic)}
-          ${field("Most impactful concept", l.concept)}
-          ${field("Committed behavior — next 30 days", l.commitment)}
-          ${field("Potential obstacles", l.obstacles)}
-          ${l.applied === "Yes" ? field("Applied in a live selling situation", l.appliedDetail || "Yes") : ""}
-          ${field("Outcome", l.outcome)}
-          ${field("Deal / account", l.deal)}
-          ${field("Revenue note", l.revenueNote)}
-          ${field("Technique that contributed", l.technique)}
-          ${field("Wants covered in future sessions", l.future)}
-        </div>
-      </div>`;
-    });
-    html += "</div>";
-  });
-  document.getElementById("lessonsList").innerHTML = html;
-}
-
 function renderLeaderboard() {
   const rows = PEOPLE.map(p => {
     const att = p.att.reduce((a,b)=>a+b,0);
@@ -1131,7 +1084,7 @@ function renderGoal() {
 }
 
 /* ================= routing / nav / theme ================= */
-const VIEWS = ["dashboard","lessons","leaderboard","revenue-goal","submit-revenue","groups-sessions","groups-lessons","groups-revenue"];
+const VIEWS = ["dashboard","leaderboard","revenue-goal","submit-revenue","groups-sessions","groups-lessons","groups-revenue"];
 
 function show(view) {
   const v = VIEWS.includes(view) ? view : "dashboard";
@@ -1160,7 +1113,6 @@ function toggleTheme() {
 renderStats();
 populateFilters();
 renderTable();
-renderLessons();
 renderLeaderboard();
 renderGroups();
 renderGoal();
