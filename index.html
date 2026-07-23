@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hubexo — Essentials Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --stable: #21245C;
+    --fresh: #00ADED;
+    --energetic: #0045C2;
+    --limitless: #FAB040;
+    --gray: #EDEDED;
+    --body: #333333;
+    --subtle: #666666;
+    --white: #FFFFFF;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', Arial, sans-serif;
+    color: var(--body);
+    background: #FAFAFB;
+    padding: 32px 20px 80px;
+  }
+  .wrap { max-width: 1060px; margin: 0 auto; }
+
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--subtle);
+    font-weight: 400;
+  }
+  h1 {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--stable);
+    margin: 4px 0 24px;
+  }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; }
+  .tab {
+    padding: 12px 26px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: var(--white);
+    color: var(--stable);
+    box-shadow: 0 1px 3px rgba(33,36,92,0.10);
+    transition: all .15s ease;
+  }
+  .tab.active {
+    background: linear-gradient(135deg, var(--energetic), var(--fresh));
+    color: var(--white);
+    box-shadow: 0 4px 14px rgba(0,173,237,0.35);
+  }
+
+  /* Stat row */
+  .stats { display: flex; gap: 14px; margin-bottom: 26px; flex-wrap: wrap; }
+  .stat {
+    flex: 1;
+    min-width: 150px;
+    background: var(--white);
+    border-radius: 14px;
+    padding: 16px 20px;
+    box-shadow: 0 1px 3px rgba(33,36,92,0.08);
+  }
+  .stat .num { font-size: 26px; font-weight: 600; color: var(--stable); }
+  .stat .lbl { font-size: 12px; color: var(--subtle); margin-top: 2px; }
+
+  /* Attendance table */
+  .card {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: 0 1px 4px rgba(33,36,92,0.08);
+    overflow: hidden;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    background: var(--stable);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 12.5px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+  thead th:first-child { text-align: left; padding-left: 20px; }
+  thead th .sess-date { display: block; font-weight: 600; }
+  thead th .sess-title { display: block; font-weight: 200; font-size: 11px; opacity: 0.85; margin-top: 2px; }
+  tbody td {
+    padding: 10px 10px;
+    font-size: 13.5px;
+    text-align: center;
+    border-top: 1px solid #F0F0F3;
+  }
+  tbody tr:nth-child(even) { background: #F7F8FA; }
+  tbody td:first-child { text-align: left; padding-left: 20px; font-weight: 500; color: var(--stable); }
+  .dot {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+  }
+  .dot.on { background: var(--fresh); }
+  .dot.off { background: #E2E4EA; }
+  td.total { font-weight: 600; color: var(--stable); }
+  td.subs { font-weight: 600; }
+  td.subs.zero { color: #C4C7D0; font-weight: 400; }
+  td.subs.some { color: var(--energetic); }
+  tfoot td {
+    padding: 10px;
+    font-size: 12px;
+    color: var(--subtle);
+    text-align: center;
+    border-top: 2px solid var(--gray);
+    background: #FBFBFD;
+  }
+  tfoot td:first-child { text-align: left; padding-left: 20px; }
+
+  /* Lessons tab */
+  .session-group { margin-bottom: 30px; }
+  .session-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .session-head .sd { font-size: 13px; font-weight: 400; color: var(--subtle); }
+  .session-head .st { font-size: 17px; font-weight: 500; color: var(--stable); }
+  .entry {
+    background: var(--white);
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(33,36,92,0.08);
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .entry-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .entry-head .who { font-weight: 500; color: var(--stable); font-size: 14.5px; flex: 1; }
+  .badge {
+    font-size: 11.5px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .badge.conf { background: var(--gray); color: var(--stable); }
+  .badge.rev { background: var(--limitless); color: var(--stable); }
+  .badge.applied { background: rgba(0,173,237,0.12); color: var(--energetic); }
+  .chev {
+    width: 10px; height: 10px;
+    border-right: 2px solid var(--subtle);
+    border-bottom: 2px solid var(--subtle);
+    transform: rotate(45deg);
+    transition: transform .15s ease;
+    flex-shrink: 0;
+  }
+  .entry.open .chev { transform: rotate(-135deg); }
+  .entry-body { display: none; padding: 4px 20px 18px; }
+  .entry.open .entry-body { display: block; }
+  .field { margin-top: 12px; }
+  .field .fl {
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--fresh);
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+  .field .fv { font-size: 13.5px; line-height: 1.55; white-space: pre-line; }
+
+  /* Leaderboard */
+  .lb-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--white);
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(33,36,92,0.08);
+    padding: 14px 20px;
+    margin-bottom: 8px;
+  }
+  .lb-row.top {
+    background: linear-gradient(135deg, var(--energetic), var(--fresh));
+    box-shadow: 0 5px 16px rgba(0,173,237,0.35);
+    padding: 18px 22px;
+  }
+  .lb-rank {
+    width: 40px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--subtle);
+    flex-shrink: 0;
+  }
+  .lb-row.top .lb-rank { color: rgba(255,255,255,0.85); font-size: 22px; }
+  .lb-name { font-weight: 500; color: var(--stable); font-size: 15px; min-width: 160px; }
+  .lb-row.top .lb-name { color: var(--white); font-size: 17px; font-weight: 600; }
+  .lb-bar-wrap { flex: 1; display: flex; align-items: center; gap: 0; height: 14px; border-radius: 999px; overflow: hidden; background: #E9EAF0; }
+  .lb-row.top .lb-bar-wrap { background: rgba(255,255,255,0.25); }
+  .lb-seg-att { height: 100%; background: var(--stable); }
+  .lb-row.top .lb-seg-att { background: rgba(255,255,255,0.95); }
+  .lb-seg-sub { height: 100%; background: var(--limitless); }
+  .lb-detail { font-size: 12px; color: var(--subtle); min-width: 200px; text-align: right; }
+  .lb-row.top .lb-detail { color: rgba(255,255,255,0.9); }
+  .lb-score {
+    width: 48px;
+    text-align: right;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--stable);
+    flex-shrink: 0;
+  }
+  .lb-row.top .lb-score { color: var(--white); font-size: 24px; }
+  .lb-note { margin-top: 16px; font-size: 12px; color: var(--subtle); }
+  /* Groups */
+  .groups-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+  .gcol {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: 0 1px 4px rgba(33,36,92,0.08);
+    overflow: hidden;
+  }
+  .gcol-head {
+    padding: 14px 18px;
+    color: var(--white);
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .gcol-head .sub { display: block; font-weight: 200; font-size: 11px; opacity: 0.85; margin-top: 2px; }
+  .gcol.c-sessions .gcol-head { background: linear-gradient(135deg, var(--stable), var(--energetic)); }
+  .gcol.c-lessons  .gcol-head { background: linear-gradient(135deg, var(--energetic), var(--fresh)); }
+  .gcol.c-revenue  .gcol-head { background: linear-gradient(135deg, #F05A28, var(--limitless)); }
+  .gblock { padding: 12px 18px 14px; border-top: 1px solid #F0F0F3; }
+  .gblock-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .gnum {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--stable);
+    line-height: 1;
+  }
+  .gcount { font-size: 11px; color: var(--subtle); }
+  .gblock.empty-group .gnum { color: #C4C7D0; }
+  .gnames { font-size: 13px; line-height: 1.7; color: var(--body); }
+  .gnames .nobody { color: #C4C7D0; }
+  @media (max-width: 860px) {
+    .groups-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 720px) {
+    .lb-detail { display: none; }
+    .lb-name { min-width: 120px; }
+  }
+
+  @media (max-width: 720px) {
+    thead th .sess-title { display: none; }
+    tbody td, thead th { padding: 8px 5px; font-size: 12px; }
+    tbody td:first-child, thead th:first-child { padding-left: 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Hubexo</div>
+  <h1>Essentials Dashboard</h1>
+
+  <div class="tabs">
+    <button class="tab" id="tab-dashboard" onclick="go('dashboard')">Attendance</button>
+    <button class="tab" id="tab-lessons" onclick="go('lessons')">Lessons Learned</button>
+    <button class="tab" id="tab-leaderboard" onclick="go('leaderboard')">Leaderboard</button>
+    <button class="tab" id="tab-groups" onclick="go('groups')">Groups</button>
+  </div>
+
+  <div id="view-dashboard">
+    <div class="stats" id="statRow"></div>
+    <div class="card">
+      <table id="attTable"></table>
+    </div>
+  </div>
+
+  <div id="view-lessons" style="display:none">
+    <div id="lessonsList"></div>
+  </div>
+
+  <div id="view-leaderboard" style="display:none">
+    <div id="lbList"></div>
+    <div class="lb-note">Score = 1 point per session attended + 1 point per Lessons Learned submission</div>
+  </div>
+
+  <div id="view-groups" style="display:none">
+    <div class="groups-grid" id="groupsGrid"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA — edit here.
+   To add a session: add {date, title} to SESSIONS, then add a
+   0 or 1 to the end of every person's "att" array (1 = attended).
+   To add a lessons-learned submission: add an object to LESSONS
+   (name must match a PEOPLE name exactly for the count to link).
+   ============================================================ */
+
+const SESSIONS = [
+  { date: "Jun 18", title: "The Success Triangle" },
+  { date: "Jun 25", title: "The Buyer Seller Dynamic" },
+  { date: "Jul 9",  title: "Essential Communication Skills" },
+  { date: "Jul 16", title: "Creating Mutual Agreement" }
+];
+
+const PEOPLE = [
+  { name: "Brittany Moss",      att: [1,1,0,1] },
+  { name: "Devon Semler",       att: [1,0,1,1] },
+  { name: "Jen Mack",           att: [1,1,1,1] },
+  { name: "John Mathieu",       att: [1,1,0,0] },
+  { name: "Josh Struletz",      att: [0,1,0,1] },
+  { name: "Josh Puvogel",       att: [1,1,1,1] },
+  { name: "Joseph Shelton",     att: [1,0,1,0] },
+  { name: "Ken Mosier",         att: [1,0,1,0] },
+  { name: "Kim Lamas",          att: [1,1,0,1] },
+  { name: "Kyle Jacox",         att: [0,1,1,1] },
+  { name: "Lance Daughtry",     att: [0,1,1,1] },
+  { name: "Mark Barretto",      att: [1,1,1,1] },
+  { name: "Marlo Franklin",     att: [0,0,0,0] },
+  { name: "Michael Ciccarelli", att: [1,0,0,0] },
+  { name: "Mike Strickland",    att: [0,1,1,1] },
+  { name: "Nicole Crader",      att: [1,1,1,0] },
+  { name: "Nicole Speck",       att: [1,1,1,0] },
+  { name: "Robert Scott",       att: [1,1,1,1] },
+  { name: "Sabrina Brackett",   att: [1,1,1,0] },
+  { name: "Vince Arbuiso",      att: [0,1,0,0] }
+];
+
+const LESSONS = [
+  {
+    name: "Robert Scott", session: 1, submitted: "Jun 25", topic: "Buyer Seller Dynamic", confidence: 8,
+    concept: "Focusing on what the buyer is saying vs. what the seller has to offer.",
+    commitment: "Qualifying - Asking question.......",
+    obstacles: "Continuing to educate on the Hubexo products.",
+    applied: "Yes",
+    appliedDetail: "Quality of Prospect - Quality of Message - Numbers Game\nNeed to build a process to enable the above.....finding good prospects in bulk and getting to them in a systematic process....i.e. bulk emails, call blitzes, etc.",
+    outcome: "Advanced opportunity",
+    revenue: "$1,400", deal: "Western Wholesale",
+    technique: "Focusing on what was important to the prospect vs. what I thought was important to them....",
+    future: "Market intel like Hubexo's services is a timing game....focus on strategies to nurture prospects not ready to buy NOW!"
+  },
+  {
+    name: "Vince Arbuiso", session: 1, submitted: "Jun 25", topic: "Buyer Seller Dance", confidence: 10,
+    concept: "Buyer Process",
+    commitment: "Understanding the buyers process and implementing the strategy to overcome the hesitations",
+    obstacles: "No obstacles but a learning curve of how to navigate that conversation",
+    applied: "Yes",
+    appliedDetail: "Upon building our 30 second commercial I have been able to effectively schedule more demos",
+    outcome: "Advanced opportunity",
+    future: "After getting the 30 second commercial down, I get a lot of interest from the client however I am noticing they are still ghosting demos. However I believe after going over the buyers process today, will help understand their behaviors better"
+  },
+  {
+    name: "Josh Puvogel", session: 1, submitted: "Jun 25", topic: "Buyer/Seller Dance", confidence: 9,
+    concept: "6 Hidden Weaknesses of Salespeople: Need for Approval, Emotional Involvement, Unsupportive Beliefs, Unsupportive Buy Cycle, Money Tolerance, Handles Rejection [this really put into words the WHYs about emotional detachment when executing your sales play]",
+    commitment: "Continue to monitor emotion and need for approval in order to coolly execute / run the playbook",
+    obstacles: "Slow business cycle / lack of MQLs builds pressure and thusly emotional involvement / sense of pressure.",
+    applied: "Yes",
+    appliedDetail: "Had a GC that is a good fit for ConstructionWire talk to her superiors and they told her they looked and we don't fit what they do. Ignored the negative feeling of rejection, encouraged the prospect not to go against their higher-up, and before wrapping the call offered a 2-day free trial so she could see for herself whether our data would be pertinent. We set up a meeting to get her a high-level overview and set up her trial — if she finds it valuable she'll have ammunition to push back on the naysayers with evidence.",
+    outcome: "Advanced opportunity",
+    revenue: "$20,000",
+    technique: "Presenting solutions, confidently quoting pricing, asking what the prospect thinks and then waiting.",
+    future: "Looking forward to the piece on talking about price / budget during discovery...this truly is an art and closely ties into negotiation which is another high level closing sales skill."
+  },
+  {
+    name: "John Mathieu", session: 1, submitted: "Jun 25", topic: "Buyers and Sellers Dance", confidence: 2,
+    concept: "One's belief will attract results that will mirror said belief.",
+    commitment: "Show up with best behavior",
+    obstacles: "None, I just need to practice what I am taught",
+    applied: "Yes",
+    appliedDetail: "My last demo for CW - I made sure I was speaking to the right decision makers and let them direct me to who I needed to speak with based on the decision maker's trust in that person. Kurby contacted me this morning via email and said they were looking strongly at our platform and wanted me to extend a (2) 2-day trial.",
+    outcome: "Advanced opportunity",
+    future: "I trust that the service has the process down."
+  },
+  {
+    name: "Nicole Crader", session: 1, submitted: "Jun 25", topic: "Buyer/Seller Dance", confidence: 9,
+    concept: "Decision - Criteria and process - How do you go about making decisions?",
+    commitment: "Don't ask who makes the decision - ask \"How do you go about making decisions?\"",
+    obstacles: "Remembering and practice",
+    applied: "No",
+    future: "I'm in week 3 - no particular need right now."
+  },
+  {
+    name: "Nicole Speck", session: 1, submitted: "Jun 25", topic: "Lushin/Sandler Essentials w/ Hubexo", confidence: 8,
+    concept: "Sales reps' most common weaknesses",
+    commitment: "Talking about money without reservation or hesitation",
+    obstacles: "Possible rejection",
+    applied: "Yes",
+    appliedDetail: "Qualifying prospects with a mutual discovery process giving them permission to say no at any time.",
+    outcome: "Other",
+    future: "I believe all topics will be covered in upcoming sessions."
+  },
+  {
+    name: "Sabrina Brackett", session: 1, submitted: "Jun 25", topic: "The Buyer Seller Dynamic", confidence: 8,
+    concept: "Just because a lead comes to us doesn't mean they're automatically the right fit. I learned not to assume there's an opportunity just because they showed interest. I need to ask the hard questions, qualify them better, and determine if there's a real need that we can solve. Because they will lie!",
+    commitment: "I will commit to digging deeper into a prospect's pain rather than accepting surface-level responses. My focus will be on uncovering process gaps, understanding how those gaps impact their bottom line, and positioning our solution around solving those specific business challenges.",
+    obstacles: "A big challenge for me will be staying consistent. Over the years, I've been exposed to a lot of different sales methods and trainers, so I've picked up bits and pieces from all of them. What I'm realizing through these sessions is that I need to stop mixing everything together and trust the Sandler process. Now it's just a matter of repetition and learning from each call.",
+    applied: "Yes",
+    appliedDetail: "I've been using the Go/No-Go approach. Instead of leaving everything open-ended and feeling like I have to keep chasing people, I've started asking them to commit one way or the other. It's actually worked really well. I still have several opportunities in play, and I've also had a number of people tell me \"No.\" I'd much rather get an honest answer than spend weeks chasing something that was never going anywhere.",
+    outcome: "Advanced opportunity",
+    future: "I'd like to see the sessions continue to build on one another by revisiting key concepts from previous sessions while introducing new ones. That continuity will help reinforce the Sandler process and make it easier to apply in my day-to-day sales conversations."
+  },
+  {
+    name: "Jen Mack", session: 1, submitted: "Jun 25", topic: "Buyer/Seller Dance", confidence: 10,
+    concept: "I really liked the phrase \"how do you go about making decisions on something like this\" when trying to find out who the decision maker is.",
+    commitment: "Remembering that it's my job to diagnose, not educate.",
+    applied: "No",
+    revenueNote: "Most of my success at my previous company came from having sales training.",
+    technique: "Selling on value and outcomes, not features.",
+    future: "I'm excited to jump into the Sandler training methods because it's been a long time since I had this training."
+  },
+  {
+    name: "Lance Daughtry", session: 1, submitted: "Jun 25", topic: "The Buyer Seller Dynamic", confidence: 8,
+    concept: "Thinking about the buyer's process while going through the seller's process. We try to pull them through our sequential steps, but we need to put ourselves in the buyer's shoes and adapt to that behavior while guiding them through the process. Revisit the reason (pain) they are considering our solution.",
+    commitment: "Adapting more to a buyer's mindset and changing how I'm asking about the buying process - \"How do you go about making decisions on something like this\" vs. \"are you or who is the decision maker?\". I never liked the term \"decision maker\" anyway.",
+    obstacles: "Still learning the products and the use cases for BPMs and understanding typical pain points.",
+    applied: "First session",
+    future: "Cold prospecting techniques - talk tracks"
+  },
+  {
+    name: "Kyle Jacox", session: 1, submitted: "Jun 25", topic: "Buyer Seller Dance", confidence: 10,
+    concept: "Decision Question - If you ask better questions you will get better answers... instead of asking \"are you the decision maker\" - ask \"How do you go about making a decision like this\"",
+    commitment: "Asking better questions and focusing on finding and talking about \"the pain\" more.",
+    applied: "First session",
+    future: "Role play demos of CW and Quest. How to start a trial for Quest and CW."
+  },
+  {
+    name: "Nicole Crader", session: 2, submitted: "Jul 9", topic: "DISC", confidence: 8,
+    concept: "How to mirror the prospect and understand their fear and type",
+    commitment: "Adjusting my high D personality which is always my challenge",
+    obstacles: "I don't see any challenges once I start doing my own calls - still observing",
+    applied: "No",
+    future: "Still new - haven't held my own call yet but will apply the skills"
+  },
+  {
+    name: "Nicole Speck", session: 2, submitted: "Jul 9", topic: "DISC", confidence: 9,
+    concept: "The percentage of individuals who fall into each DISC category and how to approach them.",
+    commitment: "Building rapport and mirroring the prospect's style during calls and meetings.",
+    obstacles: "None",
+    applied: "Yes",
+    appliedDetail: "Ask more probative questions to get to the true objection.",
+    outcome: "Advanced opportunity",
+    revenueNote: "Attributes revenue to training (no amount given)",
+    future: "How to advance stalled deals."
+  },
+  {
+    name: "Robert Scott", session: 2, submitted: "Jul 9", topic: "Communications Skills", confidence: 8,
+    concept: "Understanding the DISC profile....i.e. know who you are talking to and adapting your style to their style.",
+    commitment: "Mirroring the prospect for the type of communication that works for them.",
+    obstacles: "Just need to pull back from my natural tendency to jump in and 'do my thing'....",
+    applied: "No",
+    revenueNote: "Attributes revenue to training (no amount given)",
+    technique: "Stopping and listening.....and then going to a 2nd and 3rd level of understanding what the prospect's challenge means.....",
+    future: "Navigating talking to the wrong level person (which is common in this sale) to get a broader audience."
+  },
+  {
+    name: "Josh Puvogel", session: 3, submitted: "Jul 16", topic: "Upfront Contract", confidence: 6,
+    concept: "The #1 cause of human conflict is misaligned expectations",
+    commitment: "Go back to basics on Upfront Contracts on all sales presentations and clearly establish expectations with an upfront contract",
+    obstacles: "Not having a sales presentation...",
+    applied: "No",
+    revenueNote: "Attributes revenue to training (no amount given)",
+    future: "Booking meetings / positioning our solutions on a cold call b/c currently not seeing leads nor able to book meetings with cold outreach"
+  },
+  {
+    name: "Kyle Jacox", session: 3, submitted: "Jul 16", topic: "Up Front Contract", confidence: 10,
+    concept: "Setting boundaries",
+    commitment: "Setting \"up front contracts\" at the start of demos or calls.",
+    obstacles: "Remembering to do it.",
+    applied: "No",
+    revenue: "$3,000",
+    future: "More cold call training"
+  },
+  {
+    name: "Robert Scott", session: 3, submitted: "Jul 16", topic: "Creating Mutual Agreement", confidence: 9,
+    concept: "(My words).....not incurring opportunity costs by not setting expectations up front. Understanding both the buyer and seller are coming to the table with (potentially) two different expectations.",
+    commitment: "Building the TIME, AGENDA and OUTCOME into the opening of a call. Outcome being the most important to establish early on.",
+    obstacles: "Need to not fall into lazy process and force this into my cadence in a structured way.",
+    applied: "Yes",
+    appliedDetail: "Resetting expectations with a stalled deal (client had given a verbal and had contracts for signature) but was not responding.",
+    outcome: "Advanced opportunity",
+    future: "Setting expectations of a 'trial'........I think this is common across the whole team. With our move towards closing more strategic / larger accounts - a trial can be a useful tool but only if the expectations and set-up is done correctly."
+  },
+  {
+    name: "Lance Daughtry", session: 3, submitted: "Jul 17", topic: "Creating Mutual Agreement", confidence: 8,
+    concept: "When setting the next meeting you can take the pressure off by stating - if you decide this isn't a fit we can just cancel it. That way something is on the calendar and will reduce the number of \"check-in\" calls",
+    commitment: "Will work more on developing a smooth delivery for getting an up-front contract and setting expectations for the buyer-seller process.",
+    obstacles: "Will go through some trial and error on the up-front contract delivery until it's smooth and conversational.",
+    applied: "No",
+    future: "Good talk tracks for cold prospecting. For example, the first 10 seconds of a cold call when someone picks up the phone."
+  }
+];
+
+/* Lessons-learned sessions map (index into groups shown on Lessons tab).
+   session 1 = Jun 25 form window, 2 = Jul 9, 3 = Jul 16. */
+const LESSON_GROUPS = [
+  { key: 1, date: "Jun 25", title: "The Buyer Seller Dynamic" },
+  { key: 2, date: "Jul 9",  title: "Essential Communication Skills" },
+  { key: 3, date: "Jul 16", title: "Creating Mutual Agreement" }
+];
+
+/* ================= render ================= */
+
+function subCount(name) {
+  return LESSONS.filter(l => l.name === name).length;
+}
+
+function renderStats() {
+  const totalSubs = LESSONS.length;
+  const revTotal = LESSONS.reduce((s, l) => {
+    if (!l.revenue) return s;
+    return s + Number(l.revenue.replace(/[^0-9.]/g, ""));
+  }, 0);
+  const avgAtt = Math.round(
+    PEOPLE.reduce((s, p) => s + p.att.reduce((a,b)=>a+b,0), 0) / SESSIONS.length
+  );
+  document.getElementById("statRow").innerHTML = `
+    <div class="stat"><div class="num">${SESSIONS.length}</div><div class="lbl">Sessions so far</div></div>
+    <div class="stat"><div class="num">${avgAtt} of ${PEOPLE.length}</div><div class="lbl">Average attendance</div></div>
+    <div class="stat"><div class="num">${totalSubs}</div><div class="lbl">Lessons Learned submissions</div></div>
+    <div class="stat"><div class="num">$${revTotal.toLocaleString()}</div><div class="lbl">Revenue attributed to training</div></div>`;
+}
+
+function renderTable() {
+  let html = "<thead><tr><th>Name</th>";
+  SESSIONS.forEach(s => {
+    html += `<th><span class="sess-date">${s.date}</span><span class="sess-title">${s.title}</span></th>`;
+  });
+  html += "<th>Sessions</th><th>Submissions</th></tr></thead><tbody>";
+
+  PEOPLE.forEach(p => {
+    const total = p.att.reduce((a,b)=>a+b,0);
+    const subs = subCount(p.name);
+    html += `<tr><td>${p.name}</td>`;
+    p.att.forEach(a => {
+      html += `<td><span class="dot ${a ? "on" : "off"}"></span></td>`;
+    });
+    html += `<td class="total">${total} of ${SESSIONS.length}</td>`;
+    html += `<td class="subs ${subs ? "some" : "zero"}">${subs}</td></tr>`;
+  });
+
+  html += "</tbody><tfoot><tr><td>Attended</td>";
+  SESSIONS.forEach((s, i) => {
+    const n = PEOPLE.reduce((sum, p) => sum + p.att[i], 0);
+    html += `<td>${n}</td>`;
+  });
+  html += `<td></td><td>${LESSONS.length}</td></tr></tfoot>`;
+  document.getElementById("attTable").innerHTML = html;
+}
+
+function field(label, value) {
+  if (!value) return "";
+  return `<div class="field"><div class="fl">${label}</div><div class="fv">${value}</div></div>`;
+}
+
+function renderLessons() {
+  let html = "";
+  LESSON_GROUPS.forEach(g => {
+    const items = LESSONS.filter(l => l.session === g.key);
+    if (!items.length) return;
+    html += `<div class="session-group">
+      <div class="session-head"><span class="sd">${g.date}</span><span class="st">${g.title}</span></div>`;
+    items.forEach((l, idx) => {
+      const badges = [];
+      if (l.confidence != null) badges.push(`<span class="badge conf">Confidence ${l.confidence}/10</span>`);
+      if (l.applied === "Yes") badges.push(`<span class="badge applied">Applied live</span>`);
+      if (l.revenue) badges.push(`<span class="badge rev">${l.revenue}</span>`);
+      html += `<div class="entry" id="e-${g.key}-${idx}">
+        <div class="entry-head" onclick="this.parentElement.classList.toggle('open')">
+          <span class="who">${l.name}</span>
+          ${badges.join("")}
+          <span class="chev"></span>
+        </div>
+        <div class="entry-body">
+          ${field("Session title they gave", l.topic)}
+          ${field("Most impactful concept", l.concept)}
+          ${field("Committed behavior — next 30 days", l.commitment)}
+          ${field("Potential obstacles", l.obstacles)}
+          ${l.applied === "Yes" ? field("Applied in a live selling situation", l.appliedDetail || "Yes") : ""}
+          ${field("Outcome", l.outcome)}
+          ${field("Deal / account", l.deal)}
+          ${field("Revenue note", l.revenueNote)}
+          ${field("Technique that contributed", l.technique)}
+          ${field("Wants covered in future sessions", l.future)}
+        </div>
+      </div>`;
+    });
+    html += "</div>";
+  });
+  document.getElementById("lessonsList").innerHTML = html;
+}
+
+function renderLeaderboard() {
+  const rows = PEOPLE.map(p => {
+    const att = p.att.reduce((a,b)=>a+b,0);
+    const subs = subCount(p.name);
+    return { name: p.name, att, subs, score: att + subs };
+  }).sort((a,b) => b.score - a.score || b.subs - a.subs || a.name.localeCompare(b.name));
+
+  const max = rows[0].score || 1;
+  let rank = 0, prevScore = null, prevSubs = null;
+  let html = "";
+  rows.forEach((r, i) => {
+    if (r.score !== prevScore || r.subs !== prevSubs) { rank = i + 1; prevScore = r.score; prevSubs = r.subs; }
+    const attW = (r.att / max) * 100;
+    const subW = (r.subs / max) * 100;
+    html += `<div class="lb-row ${rank <= 3 && r.score > 0 ? "top" : ""}">
+      <div class="lb-rank">${rank}</div>
+      <div class="lb-name">${r.name}</div>
+      <div class="lb-bar-wrap">
+        <div class="lb-seg-att" style="width:${attW}%"></div>
+        <div class="lb-seg-sub" style="width:${subW}%"></div>
+      </div>
+      <div class="lb-detail">${r.att} session${r.att === 1 ? "" : "s"} &middot; ${r.subs} submission${r.subs === 1 ? "" : "s"}</div>
+      <div class="lb-score">${r.score}</div>
+    </div>`;
+  });
+  document.getElementById("lbList").innerHTML = html;
+}
+
+function revCount(name) {
+  return LESSONS.filter(l => l.name === name && (l.revenue || l.revenueNote)).length;
+}
+
+function renderGroups() {
+  const metrics = [
+    {
+      cls: "c-sessions", title: "Sessions Attended",
+      sub: "of " + SESSIONS.length + " sessions",
+      val: p => p.att.reduce((a,b)=>a+b,0),
+      noun: n => n === 1 ? "session" : "sessions"
+    },
+    {
+      cls: "c-lessons", title: "Lessons Learned",
+      sub: "form submissions",
+      val: p => subCount(p.name),
+      noun: n => n === 1 ? "submission" : "submissions"
+    },
+    {
+      cls: "c-revenue", title: "Revenue Attributed",
+      sub: "submissions crediting training with revenue",
+      val: p => revCount(p.name),
+      noun: n => n === 1 ? "submission" : "submissions"
+    }
+  ];
+
+  let html = "";
+  metrics.forEach(m => {
+    const vals = PEOPLE.map(p => ({ name: p.name, n: m.val(p) }));
+    const maxN = Math.max(...vals.map(v => v.n));
+    html += `<div class="gcol ${m.cls}">
+      <div class="gcol-head">${m.title}<span class="sub">${m.sub}</span></div>`;
+    for (let n = maxN; n >= 0; n--) {
+      const names = vals.filter(v => v.n === n).map(v => v.name).sort();
+      html += `<div class="gblock ${names.length ? "" : "empty-group"}">
+        <div class="gblock-head">
+          <span class="gnum">${n}</span>
+          <span class="gcount">${m.noun(n)} &middot; ${names.length} ${names.length === 1 ? "person" : "people"}</span>
+        </div>
+        <div class="gnames">${names.length ? names.join("<br>") : "<span class='nobody'>Nobody</span>"}</div>
+      </div>`;
+    }
+    html += "</div>";
+  });
+  document.getElementById("groupsGrid").innerHTML = html;
+}
+
+/* ================= routing ================= */
+function go(view) {
+  location.hash = view;
+  show(view);
+}
+function show(view) {
+  const v = ["lessons","leaderboard","groups"].includes(view) ? view : "dashboard";
+  ["dashboard","lessons","leaderboard","groups"].forEach(name => {
+    document.getElementById("view-" + name).style.display = v === name ? "" : "none";
+    document.getElementById("tab-" + name).classList.toggle("active", v === name);
+  });
+}
+window.addEventListener("hashchange", () => show(location.hash.replace("#","")));
+
+renderStats();
+renderTable();
+renderLessons();
+renderLeaderboard();
+renderGroups();
+show(location.hash.replace("#","") || "dashboard");
+</script>
+</body>
+</html>
