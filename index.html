@@ -153,6 +153,38 @@
     margin: 4px 0 24px;
   }
 
+  /* Filter bar + sortable headers */
+  .filterbar {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .filterbar label {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--subtle);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .filterbar select {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 13px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--heading);
+    cursor: pointer;
+  }
+  .showing { font-size: 12px; color: var(--subtle); margin-left: auto; }
+  thead th.sortable { cursor: pointer; user-select: none; }
+  thead th.sortable:hover { background: var(--energetic); }
+  body[data-theme="dark"] thead th.sortable:hover { background: #23274E; }
+  .sort-ind { font-size: 9px; margin-left: 4px; }
+
   /* Stat row */
   .stats { display: flex; gap: 14px; margin-bottom: 26px; flex-wrap: wrap; }
   .stat {
@@ -316,6 +348,136 @@
   .lb-row.top .lb-score { color: var(--white); font-size: 24px; }
   .lb-note { margin-top: 16px; font-size: 12px; color: var(--subtle); }
 
+  /* Revenue goal */
+  .goal-card {
+    background: var(--card);
+    border-radius: 16px;
+    box-shadow: 0 1px 4px var(--shadow);
+    padding: 28px 30px;
+    margin-bottom: 22px;
+    max-width: 720px;
+  }
+  .goal-top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .goal-num { font-size: 40px; font-weight: 600; color: var(--heading); line-height: 1.1; }
+  .goal-sub { font-size: 13px; color: var(--subtle); margin-top: 4px; }
+  .goal-pct { font-size: 22px; font-weight: 600; color: var(--green-a); }
+  body[data-theme="dark"] .goal-pct { color: var(--green-b); }
+  .goal-bar {
+    height: 22px;
+    border-radius: 999px;
+    background: var(--barbg);
+    overflow: hidden;
+  }
+  .goal-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--green-a), var(--green-b));
+    box-shadow: 0 2px 8px rgba(46,196,137,0.4);
+    transition: width .4s ease;
+  }
+  .goal-list { max-width: 720px; }
+  .goal-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--card);
+    border-radius: 14px;
+    box-shadow: 0 1px 3px var(--shadow);
+    padding: 14px 20px;
+    margin-bottom: 8px;
+  }
+  .goal-row .gr-name { font-weight: 500; color: var(--heading); font-size: 14.5px; }
+  .goal-row .gr-detail { font-size: 12px; color: var(--subtle); flex: 1; }
+  .goal-row .gr-amt { font-size: 16px; font-weight: 600; color: var(--green-a); white-space: nowrap; }
+  body[data-theme="dark"] .goal-row .gr-amt { color: var(--green-b); }
+
+  /* Submit Revenue (form walkthrough) */
+  .submit-intro { max-width: 760px; margin-bottom: 20px; }
+  .open-form {
+    display: inline-block;
+    padding: 12px 26px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--green-a), var(--green-b));
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(46,196,137,0.35);
+  }
+  .submit-note { font-size: 13.5px; color: var(--text); line-height: 1.6; margin-top: 14px; }
+  .form-mock {
+    max-width: 760px;
+    background: var(--card);
+    border-radius: 16px;
+    box-shadow: 0 1px 4px var(--shadow);
+    padding: 26px 28px;
+  }
+  .fq { margin-bottom: 26px; }
+  .fq.last { margin-bottom: 0; }
+  .fq.dim { opacity: 0.55; }
+  .fq-title { font-size: 14px; font-weight: 500; color: var(--heading); margin-bottom: 10px; line-height: 1.5; }
+  .fq-num { color: var(--subtle); font-weight: 400; margin-right: 2px; }
+  .req { color: #E34554; }
+  .fq-opt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13.5px;
+    color: var(--text);
+    padding: 5px 0 5px 4px;
+  }
+  .radio {
+    width: 16px; height: 16px;
+    border: 2px solid var(--subtle);
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .radio.checked { border-color: var(--green-a); }
+  .radio.checked::after {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    border-radius: 50%;
+    background: var(--green-a);
+  }
+  body[data-theme="dark"] .radio.checked { border-color: var(--green-b); }
+  body[data-theme="dark"] .radio.checked::after { background: var(--green-b); }
+  .fq-input {
+    background: var(--stripe);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--zero);
+    max-width: 520px;
+  }
+  .fq-input.tall { padding-bottom: 34px; }
+  .fq-highlight {
+    border: 2px solid var(--green-b);
+    background: rgba(46,196,137,0.07);
+    border-radius: 14px;
+    padding: 18px 20px 20px;
+    margin: 0 -8px 26px;
+  }
+  .fq-tag {
+    display: inline-block;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--white);
+    background: linear-gradient(135deg, var(--green-a), var(--green-b));
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+  }
+
   /* Group views */
   .gwrap { max-width: 620px; }
   .gcol {
@@ -375,6 +537,8 @@
       <a class="side-link" id="nav-dashboard" href="#dashboard"><span class="lbl">Attendance</span></a>
       <a class="side-link" id="nav-lessons" href="#lessons"><span class="lbl">Lessons Learned</span></a>
       <a class="side-link" id="nav-leaderboard" href="#leaderboard"><span class="lbl">Leaderboard</span></a>
+      <a class="side-link" id="nav-revenue-goal" href="#revenue-goal"><span class="lbl">Revenue Goal</span></a>
+      <a class="side-link" id="nav-submit-revenue" href="#submit-revenue"><span class="lbl">Submit Revenue</span></a>
       <div class="side-header"><span class="lbl">Groups</span></div>
       <a class="side-link sub" id="nav-groups-sessions" href="#groups-sessions"><span class="lbl">Sessions Attended</span></a>
       <a class="side-link sub" id="nav-groups-lessons" href="#groups-lessons"><span class="lbl">Lessons Learned</span></a>
@@ -392,6 +556,11 @@
 
   <div id="view-dashboard">
     <div class="stats" id="statRow"></div>
+    <div class="filterbar">
+      <label>Attended <select id="fAtt" onchange="setFilter()"></select></label>
+      <label>Submissions <select id="fSub" onchange="setFilter()"></select></label>
+      <span class="showing" id="showingCount"></span>
+    </div>
     <div class="card">
       <table id="attTable"></table>
     </div>
@@ -404,6 +573,80 @@
   <div id="view-leaderboard" style="display:none">
     <div id="lbList"></div>
     <div class="lb-note">Score = 1 point per session attended + 1 point per Lessons Learned submission</div>
+  </div>
+
+  <div id="view-revenue-goal" style="display:none">
+    <div class="goal-card">
+      <div class="goal-top">
+        <div>
+          <div class="goal-num" id="goalNum"></div>
+          <div class="goal-sub" id="goalSub"></div>
+        </div>
+        <div class="goal-pct" id="goalPct"></div>
+      </div>
+      <div class="goal-bar"><div class="goal-fill" id="goalFill"></div></div>
+    </div>
+    <div class="goal-list" id="goalList"></div>
+  </div>
+
+  <div id="view-submit-revenue" style="display:none">
+    <div class="submit-intro">
+      <a class="open-form" href="https://forms.office.com/pages/responsepage.aspx?id=R75JTUYYMEGOLfW0I42lhb8D3Hoy2HVIun_5sqnkENpUQVNCS1pLWVZKS0hQMENJUU9HUFpDSDlRVy4u&route=shorturl" target="_blank" rel="noopener">Open the Lessons Learned form</a>
+      <p class="submit-note">Revenue on the Revenue Goal page comes from questions 10, 11, and 12 below. Answer Yes on question 10, put the dollar amount in question 11, and the deal or account name in question 12.</p>
+    </div>
+
+    <div class="form-mock">
+      <div class="fq dim">
+        <div class="fq-title"><span class="fq-num">7.</span> Since your last session, have you applied a training concept in a live selling situation? <span class="req">*</span></div>
+        <div class="fq-opt"><span class="radio checked"></span> Yes</div>
+        <div class="fq-opt"><span class="radio"></span> No</div>
+        <div class="fq-opt"><span class="radio"></span> First session</div>
+      </div>
+
+      <div class="fq dim">
+        <div class="fq-title"><span class="fq-num">8.</span> Please describe the situation and what you applied.</div>
+        <div class="fq-input tall">Enter your answer</div>
+      </div>
+
+      <div class="fq dim">
+        <div class="fq-title"><span class="fq-num">9.</span> What was the outcome?</div>
+        <div class="fq-opt"><span class="radio checked"></span> Won deal</div>
+        <div class="fq-opt"><span class="radio"></span> Advanced opportunity</div>
+        <div class="fq-opt"><span class="radio"></span> Saved stalling deal</div>
+        <div class="fq-opt"><span class="radio"></span> Improved conversation, no measurable outcome</div>
+        <div class="fq-opt"><span class="radio"></span> Other</div>
+      </div>
+
+      <div class="fq-highlight">
+        <div class="fq-tag">These three feed the Revenue Goal page</div>
+
+        <div class="fq">
+          <div class="fq-title"><span class="fq-num">10.</span> Can you attribute revenue (won deals) to having sales training? (From any session, not just the recent session) <span class="req">*</span></div>
+          <div class="fq-opt"><span class="radio checked"></span> Yes</div>
+          <div class="fq-opt"><span class="radio"></span> No</div>
+        </div>
+
+        <div class="fq">
+          <div class="fq-title"><span class="fq-num">11.</span> Estimated dollar amount (if applicable)</div>
+          <div class="fq-input">Enter your answer</div>
+        </div>
+
+        <div class="fq last">
+          <div class="fq-title"><span class="fq-num">12.</span> Deal or account name (if applicable)</div>
+          <div class="fq-input">Enter your answer</div>
+        </div>
+      </div>
+
+      <div class="fq dim">
+        <div class="fq-title"><span class="fq-num">13.</span> What training technique contributed to your success?</div>
+        <div class="fq-input">Enter your answer</div>
+      </div>
+
+      <div class="fq dim">
+        <div class="fq-title"><span class="fq-num">14.</span> What topics or skills would you like covered in future sessions? <span class="req">*</span></div>
+        <div class="fq-input tall">Enter your answer</div>
+      </div>
+    </div>
   </div>
 
   <div id="view-groups-sessions" style="display:none">
@@ -625,6 +868,10 @@ const LESSONS = [
   }
 ];
 
+/* Revenue goal for the Revenue Goal page. Contributions are pulled
+   automatically from LESSONS entries that have a "revenue" dollar amount. */
+const REVENUE_GOAL = 100000;
+
 /* Lessons-learned sessions map (index into groups shown on Lessons tab).
    session 1 = Jun 25 form window, 2 = Jul 9, 3 = Jul 16. */
 const LESSON_GROUPS = [
@@ -641,45 +888,102 @@ function subCount(name) {
 
 function renderStats() {
   const totalSubs = LESSONS.length;
-  const revTotal = LESSONS.reduce((s, l) => {
-    if (!l.revenue) return s;
-    return s + Number(l.revenue.replace(/[^0-9.]/g, ""));
-  }, 0);
   const avgAtt = Math.round(
     PEOPLE.reduce((s, p) => s + p.att.reduce((a,b)=>a+b,0), 0) / SESSIONS.length
   );
   document.getElementById("statRow").innerHTML = `
     <div class="stat"><div class="num">${SESSIONS.length}</div><div class="lbl">Sessions so far</div></div>
     <div class="stat"><div class="num">${avgAtt} of ${PEOPLE.length}</div><div class="lbl">Average attendance</div></div>
-    <div class="stat"><div class="num">${totalSubs}</div><div class="lbl">Lessons Learned submissions</div></div>
-    <div class="stat"><div class="num">$${revTotal.toLocaleString()}</div><div class="lbl">Revenue attributed to training</div></div>`;
+    <div class="stat"><div class="num">${totalSubs}</div><div class="lbl">Lessons Learned submissions</div></div>`;
+}
+
+const tableState = { sortKey: "name", sortDir: 1, fAtt: "all", fSub: "all" };
+
+function setFilter() {
+  tableState.fAtt = document.getElementById("fAtt").value;
+  tableState.fSub = document.getElementById("fSub").value;
+  renderTable();
+}
+
+function setSort(key) {
+  if (tableState.sortKey === key) {
+    tableState.sortDir *= -1;
+  } else {
+    tableState.sortKey = key;
+    tableState.sortDir = (key === "name") ? 1 : -1; /* numbers start high-to-low, names A-Z */
+  }
+  renderTable();
+}
+
+function populateFilters() {
+  const attVals = [...new Set(PEOPLE.map(p => p.att.reduce((a,b)=>a+b,0)))].sort((a,b)=>b-a);
+  const subVals = [...new Set(PEOPLE.map(p => subCount(p.name)))].sort((a,b)=>b-a);
+  const fill = (id, vals) => {
+    document.getElementById(id).innerHTML =
+      `<option value="all">All</option>` + vals.map(v => `<option value="${v}">${v}</option>`).join("");
+  };
+  fill("fAtt", attVals);
+  fill("fSub", subVals);
 }
 
 function renderTable() {
-  let html = "<thead><tr><th>Name</th>";
-  SESSIONS.forEach(s => {
-    html += `<th><span class="sess-date">${s.date}</span><span class="sess-title">${s.title}</span></th>`;
-  });
-  html += "<th>Sessions</th><th>Submissions</th></tr></thead><tbody>";
+  let rows = PEOPLE.map(p => ({
+    name: p.name,
+    att: p.att,
+    total: p.att.reduce((a,b)=>a+b,0),
+    subs: subCount(p.name)
+  }));
 
-  PEOPLE.forEach(p => {
-    const total = p.att.reduce((a,b)=>a+b,0);
-    const subs = subCount(p.name);
-    html += `<tr><td>${p.name}</td>`;
-    p.att.forEach(a => {
+  if (tableState.fAtt !== "all") rows = rows.filter(r => r.total === Number(tableState.fAtt));
+  if (tableState.fSub !== "all") rows = rows.filter(r => r.subs === Number(tableState.fSub));
+
+  const keyVal = r => {
+    const k = tableState.sortKey;
+    if (k === "name") return r.name;
+    if (k === "total") return r.total;
+    if (k === "subs") return r.subs;
+    return r.att[Number(k.slice(1))]; /* s0..s3 = session columns */
+  };
+  rows.sort((a, b) => {
+    const va = keyVal(a), vb = keyVal(b);
+    let cmp = (typeof va === "string") ? va.localeCompare(vb) : va - vb;
+    if (cmp === 0) cmp = a.name.localeCompare(b.name) * tableState.sortDir; /* stable name tiebreak */
+    return cmp * tableState.sortDir;
+  });
+
+  const ind = key => tableState.sortKey === key
+    ? `<span class="sort-ind">${tableState.sortDir === 1 ? "&#9650;" : "&#9660;"}</span>` : "";
+
+  let html = `<thead><tr><th class="sortable" onclick="setSort('name')">Name${ind("name")}</th>`;
+  SESSIONS.forEach((s, i) => {
+    html += `<th class="sortable" onclick="setSort('s${i}')"><span class="sess-date">${s.date}${ind("s"+i)}</span><span class="sess-title">${s.title}</span></th>`;
+  });
+  html += `<th class="sortable" onclick="setSort('total')">Attended${ind("total")}</th>`;
+  html += `<th class="sortable" onclick="setSort('subs')">Submissions${ind("subs")}</th></tr></thead><tbody>`;
+
+  rows.forEach(r => {
+    html += `<tr><td>${r.name}</td>`;
+    r.att.forEach(a => {
       html += `<td><span class="dot ${a ? "on" : "off"}"></span></td>`;
     });
-    html += `<td class="total">${total} of ${SESSIONS.length}</td>`;
-    html += `<td class="subs ${subs ? "some" : "zero"}">${subs}</td></tr>`;
+    html += `<td class="total">${r.total} of ${SESSIONS.length}</td>`;
+    html += `<td class="subs ${r.subs ? "some" : "zero"}">${r.subs}</td></tr>`;
   });
+  if (!rows.length) {
+    html += `<tr><td colspan="${SESSIONS.length + 3}" style="text-align:center;color:var(--zero);padding:24px">Nobody matches these filters</td></tr>`;
+  }
 
   html += "</tbody><tfoot><tr><td>Attended</td>";
   SESSIONS.forEach((s, i) => {
-    const n = PEOPLE.reduce((sum, p) => sum + p.att[i], 0);
+    const n = rows.reduce((sum, r) => sum + r.att[i], 0);
     html += `<td>${n}</td>`;
   });
-  html += `<td></td><td>${LESSONS.length}</td></tr></tfoot>`;
+  const subTotal = rows.reduce((sum, r) => sum + r.subs, 0);
+  html += `<td></td><td>${subTotal}</td></tr></tfoot>`;
   document.getElementById("attTable").innerHTML = html;
+
+  document.getElementById("showingCount").textContent =
+    rows.length === PEOPLE.length ? `Showing all ${PEOPLE.length} people` : `Showing ${rows.length} of ${PEOPLE.length} people`;
 }
 
 function field(label, value) {
@@ -798,8 +1102,36 @@ function renderGroups() {
   });
 }
 
+function renderGoal() {
+  const contributions = LESSONS
+    .filter(l => l.revenue)
+    .map(l => ({
+      name: l.name,
+      amount: Number(l.revenue.replace(/[^0-9.]/g, "")),
+      deal: l.deal || "",
+      date: l.submitted
+    }))
+    .sort((a, b) => b.amount - a.amount);
+
+  const total = contributions.reduce((s, c) => s + c.amount, 0);
+  const pct = Math.min(100, (total / REVENUE_GOAL) * 100);
+
+  document.getElementById("goalNum").textContent = "$" + total.toLocaleString();
+  document.getElementById("goalSub").textContent =
+    "of $" + REVENUE_GOAL.toLocaleString() + " goal - revenue attributed to training";
+  document.getElementById("goalPct").textContent = pct.toFixed(1) + "%";
+  document.getElementById("goalFill").style.width = pct + "%";
+
+  document.getElementById("goalList").innerHTML = contributions.map(c => `
+    <div class="goal-row">
+      <span class="gr-name">${c.name}</span>
+      <span class="gr-detail">${c.deal ? c.deal + " &middot; " : ""}${c.date}</span>
+      <span class="gr-amt">$${c.amount.toLocaleString()}</span>
+    </div>`).join("");
+}
+
 /* ================= routing / nav / theme ================= */
-const VIEWS = ["dashboard","lessons","leaderboard","groups-sessions","groups-lessons","groups-revenue"];
+const VIEWS = ["dashboard","lessons","leaderboard","revenue-goal","submit-revenue","groups-sessions","groups-lessons","groups-revenue"];
 
 function show(view) {
   const v = VIEWS.includes(view) ? view : "dashboard";
@@ -826,10 +1158,12 @@ function toggleTheme() {
 
 /* init */
 renderStats();
+populateFilters();
 renderTable();
 renderLessons();
 renderLeaderboard();
 renderGroups();
+renderGoal();
 
 let savedTheme = "light";
 let savedNav = "open";
